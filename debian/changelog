@@ -1,3 +1,14 @@
+clusto-sgext (0.1.4) maverick; urgency=low
+
+  [ Jeremy Grosser ]
+  * Remove pyc files
+  * Add gitignore
+  * oooooo
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 24 Aug 2011 18:20:23 +0000
+
 clusto-sgext (0.1.0) unstable; urgency=low
 
   * Initial release
