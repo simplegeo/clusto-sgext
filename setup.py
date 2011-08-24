@@ -1,7 +1,9 @@
 from setuptools import setup
 
+__version__ = file('VERSION', 'r').read().strip('\r\n\t ')
+
 setup(name='clusto-sgext',
-      version='0.1',
+      version=__version__,
       packages=['sgext'],
       install_requires=[
         'clusto',

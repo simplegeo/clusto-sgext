@@ -1,0 +1,12 @@
+Source: clusto-sgext
+Section: admin
+Priority: extra
+Maintainer: Jeremy Grosser <jeremy@synack.me>
+Build-Depends: cdbs, debhelper (>= 7), python-support, python-setuptoools
+Standards-Version: 3.8.3
+
+Package: clusto-sgext
+Architecture: any
+Depends: ${python:Depends}, python-boto, python-mysqldb, python-ipy, python-kombu, python-eventlet, python-yaml
+Provides: ${python:Provides}
+Description: SimpleGeo extension for clusto
