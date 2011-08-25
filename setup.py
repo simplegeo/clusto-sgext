@@ -1,10 +1,10 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 __version__ = file('VERSION', 'r').read().strip('\r\n\t ')
 
 setup(name='clusto-sgext',
       version=__version__,
-      packages=['sgext'],
+      packages=find_packages(),
       install_requires=[
         'clusto',
         'IPy',
