@@ -81,8 +81,10 @@ def barker_callback(body):
 
         #server.bind_ip_to_osport(ec2['local-ipv4'], 'nic-eth', 0)
         #server.bind_ip_to_osport(ec2['public-ipv4'], 'nic-eth', 0)
-        server.set_attr(key='ip', subkey='ipstring', value=ec2['local-ipv4'], number=0)
-        server.set_attr(key='ip', subkey='ipstring', value=ec2['public-ipv4'], number=0)
+        if len(server.attrs(key='ip', subkey='ipstring')) != 2:
+            server.del_attrs(key='ip', subkey='ipstring')
+            server.add_attr(key='ip', subkey='ipstring', value=ec2['local-ipv4'], number=0)
+            server.add_attr(key='ip', subkey='ipstring', value=ec2['public-ipv4'], number=0)
 
         system = body['os']
         server.set_attr(key='system', subkey='memory',
