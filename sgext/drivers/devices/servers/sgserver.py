@@ -57,19 +57,13 @@ class SGServer(BasicServer):
         return json.loads(resp.read())
 
     def start_service(self, name, provider='monit'):
-        result = self.opsd_request('POST', '/v0/service/%s/%s.json' % (provider, name), {'action': 'start'})
-        if result.get('status', None) != 'ok':
-            raise SGException('Error starting service: %s' % result)
+        return self.opsd_request('POST', '/v0/service/%s/%s.json' % (provider, name), {'action': 'start'})
 
     def stop_service(self, name, provider='monit'):
-        result = self.opsd_request('POST', '/v0/service/%s/%s.json' % (provider, name), {'action': 'stop'})
-        if result.get('status', None) != 'ok':
-            raise SGException('Error stopping service: %s' % result)
+        return self.opsd_request('POST', '/v0/service/%s/%s.json' % (provider, name), {'action': 'stop'})
 
     def restart_service(self, name, provider='monit'):
-        result = self.opsd_request('POST', '/v0/service/%s/%s.json' % (provider, name), {'action': 'restart'})
-        if result.get('status', None) != 'ok':
-            raise SGException('Error restarting service: %s' % result)
+        return self.opsd_request('POST', '/v0/service/%s/%s.json' % (provider, name), {'action': 'restart'})
 
     def get_service(self, name=None, provider='monit'):
         if name is None:
