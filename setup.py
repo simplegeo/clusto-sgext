@@ -18,5 +18,6 @@ setup(name='clusto-sgext',
             'clusto-puppet-node2 = sgext.commands.puppet_node2:main',
             'clusto-barker-consumer = sgext.commands.barker_consumer:main',
             'clusto-ec2-report = sgext.commands.ec2_report:main',
+            'clusto-aws-cleanup = sgext.commands.aws_cleanup:main',
         ]
       })
