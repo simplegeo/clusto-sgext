@@ -12,7 +12,6 @@ import types
 import boto.ec2.elb
 
 from clusto.drivers.devices.appliance.basicappliance import BasicAppliance
-from clusto.drivers.base.driver import Driver
 from sgext.util import SGException, get_names
 from sgext.util.aws import get_credentials
 
