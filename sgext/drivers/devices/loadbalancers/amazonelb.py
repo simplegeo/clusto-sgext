@@ -92,7 +92,7 @@ class AmazonELB(BasicAppliance):
             raise SGELBException('Could not register instance %s for ELB %s'
                                  % (instance.name, self.elb_name))
 
-    def remove(self, instances):
+    def remove(self, instance):
         """De-register instances for this ELB and remove them as
         children in clusto."""
         if not isinstance(instance, SGServer):
