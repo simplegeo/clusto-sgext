@@ -74,7 +74,8 @@ class AmazonELB(BasicAppliance):
                 # Insert all already-registered instances into the ELB if
                 # they exist as clusto objects already.
                 try:
-                    BasicAppliance.insert(self, get_by_name(instance_id))
+                    BasicAppliance.insert(self,
+                                          clusto.get_by_name(instance_id))
                 except LookupError:
                     pass
 
@@ -129,10 +130,12 @@ class AmazonELB(BasicAppliance):
     def enable_zones(self, names_or_entities):
         """Enable availability zones for this ELB."""
         if len(names_or_entities) < 1:
-            raise ValueError('Must provide a non-empty name, object, or sequence.')
+            raise ValueError('Must provide a non-empty name, object, or '
+                             'sequence.')
         elb = self._get_boto_elb_object()
         names = get_names(names_or_entities, exception_type=SGELBException,
-                          message='Invalid object/string passed as availability zone')
+                          message='Invalid object/string passed as '
+                          'availability zone')
         elb.enable_zones(names)
 
     def enable_zone(self, name_or_entity):
@@ -142,10 +145,12 @@ class AmazonELB(BasicAppliance):
     def disable_zones(self, names_or_entities):
         """Disable availability zones for this ELB."""
         if len(names_or_entities) < 1:
-            raise ValueError('Must provide a non-empty name, object, or sequence.')
+            raise ValueError('Must provide a non-empty name, object, or '
+                             'sequence.')
         elb = self._get_boto_elb_object()
         names = get_names(names_or_entities, exception_type=SGELBException,
-                          message='Invalid object/string passed as availability zone')
+                          message='Invalid object/string passed as '
+                          'availability zone')
         elb.disable_zones(names)
 
     def disable_zone(self, name_or_entity):
@@ -153,7 +158,10 @@ class AmazonELB(BasicAppliance):
         self.disable_zones(name_or_entity)
 
     def instance_health(self, instances=None):
+        """Return the instance health for the specified instances in
+        this ELB (or all instances if none are specified.)"""
         if instances is not None:
             instances = get_names(instances, exception_type=SGELBException,
-                                  message='Invalid object/string passed as instance')
+                                  message='Invalid object/string passed '
+                                  'as instance')
         return self._get_boto_elb_object().get_instance_health(instances)
