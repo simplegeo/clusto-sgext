@@ -39,7 +39,7 @@ class AmazonELB(BasicAppliance):
             raise SGELBException('Cannot find attribute with key="ec2", '
                                  'subkey="region" on AmazonELB object named '
                                  '"%s" or any of it\'s parents.' % self.name)
-        conn = boto.ec2.elb.connect_to_region(region)
+        conn = boto.ec2.elb.connect_to_region(region, **self.credentials)
         if conn is None:
             raise SGELBException('Could not establish connection to region %s'
                                  % region)
