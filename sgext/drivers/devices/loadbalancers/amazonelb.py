@@ -7,9 +7,12 @@
 
 """Control the Amazon Elastic Load Balancer from Clusto."""
 
+import types
+
 import boto.ec2.elb
 
 from clusto.drivers.devices.appliance.basicappliance import BasicAppliance
+from clusto.drivers.base.driver import Driver
 from sgext.util import SGException
 from sgext.util.aws import get_credentials
 
@@ -63,26 +66,56 @@ class AmazonELB(BasicAppliance):
     def hostname(self):
         return self._get_boto_elb_object().dns_name
 
+    def enable_zones(self, names_or_entities):
+        """Enable availability zones for this ELB."""
+        if len(names_or_entities) < 1:
+            raise ValueError('Must provide a non-empty name, object, or sequence.')
+        elb = self._get_boto_elb_object()
+        names = _get_names(names_or_entities)
+        elb.enable_zones(names)
+
     def enable_zone(self, name_or_entity):
-        conn = self._get_boto_connection()
+        """Enable an availability zone for this ELB."""
+        self.enable_zones(name_or_entity)
 
-        if isinstance(name_or_entity, str):
-            name = name_or_entity
-        else:
-            name = name_or_entity.name
-
-            conn.enable_availability_zones(str(self.elb_name), [name])
+    def disable_zones(self, names_or_entities):
+        """Disable availability zones for this ELB."""
+        if len(names_or_entities) < 1:
+            raise ValueError('Must provide a non-empty name, object, or sequence.')
+        elb = self._get_boto_elb_object()
+        names = _get_names(names_or_entities)
+        elb.disable_zones(names)
 
     def disable_zone(self, name_or_entity):
-        conn = self._get_boto_connection()
-
-        if isinstance(name_or_entity, str):
-            name = name_or_entity
-        else:
-            name = name_or_entity.name
-
-        conn.disable_availability_zones(str(self.elb_name), [name])
+        """Disable an availability zone for this ELB."""
+        self.disable_zones(name_or_entity)
 
     def get_state(self):
         conn = self._get_boto_connection()
         return conn.describe_instance_health(str(self.elb_name))
+
+
+def _get_names(names_or_entities):
+    names = []
+    if is_instance(names_or_entities, list):
+        for thing in names_or_entities:
+            if isinstance(thing, types.StringTypes):
+                names.append(thing)
+            elif isinstance(thing, Driver):
+                names.append(thing.name)
+            else:
+                raise SGELBException('Invalid entity %s of class %s, '
+                                     'could not use it as an availability '
+                                     'zone' % (thing.name, thing.__class__))
+    else:
+        thing = names_or_entities
+        if isinstance(thing, types.StringTypes):
+            names.append(thing)
+        elif isinstance(thing, Driver):
+            names.append(thing.name)
+        else:
+            raise SGELBException('Invalid entity %s of class %s, '
+                                 'could not use it as an availability '
+                                 'zone' % (thing.name, thing.__class__))
+    return names
+
