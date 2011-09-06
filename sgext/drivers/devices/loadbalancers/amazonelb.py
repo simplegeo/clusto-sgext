@@ -30,7 +30,6 @@ class AmazonELB(BasicAppliance):
     def __init__(self, name, elbname, **kwargs):
         BasicAppliance.__init__(self, name, **kwargs)
         self.set_attr(key='elb', subkey='name', value=elbname)
-        self.credentials = get_credentials()
 
     def _get_boto_connection(self):
         """Internal method. Returns the boto connection object for this ELB."""
@@ -40,7 +39,7 @@ class AmazonELB(BasicAppliance):
             raise SGELBException('Cannot find attribute with key="ec2", '
                                  'subkey="region" on AmazonELB object named '
                                  '"%s" or any of it\'s parents.' % self.name)
-        conn = boto.ec2.elb.connect_to_region(region, **self.credentials)
+        conn = boto.ec2.elb.connect_to_region(region, **get_credentials())
         if conn is None:
             raise SGELBException('Could not establish connection to region %s'
                                  % region)
