@@ -60,11 +60,23 @@ class AmazonELB(BasicAppliance):
 
     @property
     def elb_name(self):
+        """Return the aws name of this AmazonELB object."""
         return self.attr_value(key='elb', subkey='name')
 
     @property
     def hostname(self):
+        """Return the public DNS for this ELB."""
         return self._get_boto_elb_object().dns_name
+
+    @property
+    def availability_zones(self):
+        """Return the list of active availability zones for this ELB."""
+        return self._get_boto_elb_object().availability_zones
+
+    @property
+    def listeners(self):
+        """Return the list of active listeners for this ELB."""
+        return self._get_boto_elb_object().listeners
 
     def enable_zones(self, names_or_entities):
         """Enable availability zones for this ELB."""
