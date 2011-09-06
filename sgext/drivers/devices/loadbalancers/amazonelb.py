@@ -43,6 +43,18 @@ class AmazonELB(BasicAppliance):
                                  % region)
         return conn
 
+    def _get_boto_elb_object(self):
+        """Internal method. Return the boto object for this ELB."""
+        conn = self._get_boto_connection()
+        lbs = conn.get_all_load_balancers(self.elb_name)
+        if len(lbs) < 1:
+            raise SGELBException('Could not find ELB named %s in AWS!'
+                                 % self.elb_name)
+        elif len(lbs) > 1:
+            raise SGELBException('Found multiple ELBs named %s in AWS!'
+                                 % self.elb_name)
+        return lbs[0]
+
     def enable_zone(self, name_or_entity):
         conn = self._get_boto_connection()
 
