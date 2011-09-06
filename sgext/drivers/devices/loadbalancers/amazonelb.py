@@ -10,7 +10,12 @@
 import boto.ec2.elb
 
 from clusto.drivers.devices.appliance.basicappliance import BasicAppliance
+from sgext.util import SGException
 from sgext.util.aws import get_credentials
+
+
+class SGELBException(SGException):
+    pass
 
 
 class AmazonELB(BasicAppliance):
@@ -23,7 +28,14 @@ class AmazonELB(BasicAppliance):
 
     def get_boto_connection(self):
         region = self.attr_value(key='ec2', subkey='region', merge_container_attrs=True)
-        return boto.ec2.elb.connect_to_region(region)
+        if region is None:
+            raise SGELBException('Cannot find attribute with key="ec2", '
+                                 'subkey="region" on AmazonELB object named '
+                                 '"%s" or any of it\'s parents.' % self.name)
+        conn = boto.ec2.elb.connect_to_region(region)
+        if conn is None:
+            raise SGELBException('Could not establish connection to region %s' % region)
+        return conn
 
     def enable_zone(self, name_or_entity):
         conn = self.get_boto_connection()
