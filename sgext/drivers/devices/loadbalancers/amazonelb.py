@@ -157,6 +157,3 @@ class AmazonELB(BasicAppliance):
             instances = get_names(instances, exception_type=SGELBException,
                                   message='Invalid object/string passed as instance')
         return self._get_boto_elb_object().get_instance_health(instances)
-
-    def get_state(self):
-        return self.instance_health()
