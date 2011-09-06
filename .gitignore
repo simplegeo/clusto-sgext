@@ -1,2 +1,7 @@
 *.pyc
 *.egg-info
+/.Python
+/bin
+/clusto.conf
+/include
+/lib
