@@ -1,6 +1,15 @@
-from clusto.drivers.devices.appliance.basicappliance import BasicAppliance
+# -*- coding: utf-8 -*-
+#
+# © 2011 SimpleGeo, Inc. All rights reserved.
+# Author: Jeremy Grosser <jeremy@simplegeo.com>
+# Author: Paul Lathrop <paul@simplegeo.com>
+#
+
+"""Control the Amazon Elastic Load Balancer from Clusto."""
+
 import boto.ec2.elb
 
+from clusto.drivers.devices.appliance.basicappliance import BasicAppliance
 class AmazonELB(BasicAppliance):
     _driver_name = 'amazonelb'
 
