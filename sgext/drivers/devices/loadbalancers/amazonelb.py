@@ -31,14 +31,6 @@ class AmazonELB(BasicAppliance):
         BasicAppliance.__init__(self, name, **kwargs)
         self.set_attr(key='elb', subkey='name', value=elbname)
         self.credentials = get_credentials()
-        elb = self._get_boto_elb_object()
-        for instance_id in [instance.id for instance in elb.instances]:
-            # Insert all already-registered instances into the ELB if
-            # they exist as clusto objects already.
-            try:
-                BasicAppliance.insert(self, get_by_name(instance_id))
-            except LookupError:
-                pass
 
     def _get_boto_connection(self):
         """Internal method. Returns the boto connection object for this ELB."""
@@ -65,6 +57,26 @@ class AmazonELB(BasicAppliance):
             raise SGELBException('Found multiple ELBs named %s in AWS!'
                                  % self.elb_name)
         return lbs[0]
+
+    def update_instances(self):
+        """Fetch the registered instances for this ELB from the AWS
+        API and insert them into the ELB object (if they exist as
+        clusto objects)."""
+        elb = self._get_boto_elb_object()
+        elb_instances = [instance.id for instance in elb.instances]
+        self_instances = self.contents()
+        for instance in self_instances:
+            if instance.name not in elb_instances:
+                BasicAppliance.remove(self, instance)
+        for instance_id in elb_instances:
+            if instance_id not in [instance.name
+                                   for instance in self_instances]:
+                # Insert all already-registered instances into the ELB if
+                # they exist as clusto objects already.
+                try:
+                    BasicAppliance.insert(self, get_by_name(instance_id))
+                except LookupError:
+                    pass
 
     def insert(self, instance):
         """Register instances for this ELB and add them as children in
