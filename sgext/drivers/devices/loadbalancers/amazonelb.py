@@ -30,6 +30,14 @@ class AmazonELB(BasicAppliance):
         BasicAppliance.__init__(self, name, **kwargs)
         self.set_attr(key='elb', subkey='name', value=elbname)
         self.credentials = get_credentials()
+        elb = self._get_boto_elb_object()
+        for instance_id in [instance.id for instance in elb.instances]:
+            # Insert all already-registered instances into the ELB if
+            # they exist as clusto objects already.
+            try:
+                BasicAppliance.insert(self, get_by_name(instance_id))
+            except LookupError:
+                pass
 
     def _get_boto_connection(self):
         """Internal method. Returns the boto connection object for this ELB."""
