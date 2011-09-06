@@ -10,12 +10,16 @@
 import boto.ec2.elb
 
 from clusto.drivers.devices.appliance.basicappliance import BasicAppliance
+from sgext.util.aws import get_credentials
+
+
 class AmazonELB(BasicAppliance):
     _driver_name = 'amazonelb'
 
     def __init__(self, name, elbname, **kwargs):
         BasicAppliance.__init__(self, name, **kwargs)
         self.set_attr(key='elb', subkey='name', value=elbname)
+        self.credentials = get_credentials()
 
     def get_boto_connection(self):
         region = self.attr_value(key='ec2', subkey='region', merge_container_attrs=True)
