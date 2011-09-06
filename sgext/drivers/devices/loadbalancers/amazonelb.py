@@ -8,8 +8,10 @@
 """Control the Amazon Elastic Load Balancer from Clusto."""
 
 import boto.ec2.elb
-
+from boto.exception import BotoServerError
+import clusto
 from clusto.drivers.devices.appliance.basicappliance import BasicAppliance
+
 import sgext.drivers
 from sgext.util import SGException, get_names
 from sgext.util.aws import get_credentials
