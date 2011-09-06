@@ -12,6 +12,7 @@ import types
 import boto.ec2.elb
 
 from clusto.drivers.devices.appliance.basicappliance import BasicAppliance
+from sgext.drivers import SGServer
 from sgext.util import SGException, get_names
 from sgext.util.aws import get_credentials
 
@@ -69,6 +70,8 @@ class AmazonELB(BasicAppliance):
         """Register instances for this ELB and add them as children in
         clusto."""
         BasicAppliance.insert(self, instance)
+        if not isinstance(instance, SGServer):
+            return
         elb = self._get_boto_elb_object()
         try:
             elb.register_instances(str(instance.name))
@@ -80,6 +83,9 @@ class AmazonELB(BasicAppliance):
     def remove(self, instances):
         """De-register instances for this ELB and remove them as
         children in clusto."""
+        if not isinstance(instance, SGServer):
+            BasicAppliance.remove(self, instance)
+            return
         elb = self._get_boto_elb_object()
         try:
             elb.deregister_instances(str(instance.name))
