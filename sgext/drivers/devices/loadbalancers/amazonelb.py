@@ -49,7 +49,7 @@ class AmazonELB(BasicAppliance):
     def _get_boto_elb_object(self):
         """Internal method. Return the boto object for this ELB."""
         conn = self._get_boto_connection()
-        lbs = conn.get_all_load_balancers(self.elb_name)
+        lbs = conn.get_all_load_balancers(str(self.elb_name))
         if len(lbs) < 1:
             raise SGELBException('Could not find ELB named %s in AWS!'
                                  % self.elb_name)
