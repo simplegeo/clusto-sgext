@@ -57,6 +57,29 @@ class AmazonELB(BasicAppliance):
                                  % self.elb_name)
         return lbs[0]
 
+    def insert(self, instance):
+        """Register instances for this ELB and add them as children in
+        clusto."""
+        BasicAppliance.insert(self, instance)
+        elb = self._get_boto_elb_object()
+        try:
+            elb.register_instances(str(instance.name))
+        except BotoServerError:
+            BasicAppliance.remove(self, instance)
+            raise SGELBException('Could not register instance %s for ELB %s'
+                                 % (instance.name, self.elb_name))
+
+    def remove(self, instances):
+        """De-register instances for this ELB and remove them as
+        children in clusto."""
+        elb = self._get_boto_elb_object()
+        try:
+            elb.deregister_instances(str(instance.name))
+        except BotoServerError:
+            raise SGELBException('Could not deregister instance %s for ELB %s'
+                                 % (instance.name, self.elb_name))
+        BasicAppliance.remove(self, instance)
+
     @property
     def elb_name(self):
         """Return the aws name of this AmazonELB object."""
