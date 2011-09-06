@@ -7,8 +7,6 @@
 
 """Control the Amazon Elastic Load Balancer from Clusto."""
 
-import types
-
 import boto.ec2.elb
 
 from clusto.drivers.devices.appliance.basicappliance import BasicAppliance

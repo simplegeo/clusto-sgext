@@ -6,6 +6,8 @@
 
 """Module for utility classes/functions."""
 
+import types
+
 from clusto.drivers.base.driver import Driver
 
 
