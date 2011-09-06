@@ -104,6 +104,11 @@ class AmazonELB(BasicAppliance):
         """Disable an availability zone for this ELB."""
         self.disable_zones(name_or_entity)
 
+    def instance_health(self, instances=None):
+        if instances is not None:
+            instances = get_names(instances, exception_type=SGELBException,
+                                  message='Invalid object/string passed as instance')
+        return self._get_boto_elb_object().get_instance_health(instances)
+
     def get_state(self):
-        conn = self._get_boto_connection()
-        return conn.describe_instance_health(str(self.elb_name))
+        return self.instance_health()
