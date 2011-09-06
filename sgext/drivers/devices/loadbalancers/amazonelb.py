@@ -55,6 +55,14 @@ class AmazonELB(BasicAppliance):
                                  % self.elb_name)
         return lbs[0]
 
+    @property
+    def elb_name(self):
+        return str(self.attr_value(key='elb', subkey='name'))
+
+    @property
+    def hostname(self):
+        return self._get_boto_elb_object().dns_name
+
     def enable_zone(self, name_or_entity):
         conn = self._get_boto_connection()
 
@@ -63,8 +71,7 @@ class AmazonELB(BasicAppliance):
         else:
             name = name_or_entity.name
 
-            conn.enable_availability_zones(self.attr_value(key='elb', subkey='name'),
-                                       [name])
+            conn.enable_availability_zones(self.elb_name, [name])
 
     def disable_zone(self, name_or_entity):
         conn = self._get_boto_connection()
@@ -74,8 +81,7 @@ class AmazonELB(BasicAppliance):
         else:
             name = name_or_entity.name
 
-        conn.disable_availability_zones(self.attr_value(key='elb', subkey='name'),
-                                        [name])
+        conn.disable_availability_zones(self.elb_name, [name])
 
     def get_state(self):
         conn = self._get_boto_connection()
