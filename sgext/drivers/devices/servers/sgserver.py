@@ -7,6 +7,8 @@ import socket
 import json
 import sys
 
+from sgext.util import SGException
+
 class Request(urllib2.Request):
     def __init__(self, method, url, data=None):
         if isinstance(data, dict):
@@ -17,10 +19,6 @@ class Request(urllib2.Request):
 
     def get_method(self):
         return self.method
-
-
-class SGException(Exception):
-    pass
 
 
 class SGServer(BasicServer):
