@@ -6,7 +6,7 @@ class AmazonELB(BasicAppliance):
 
     def __init__(self, name, elbname, **kwargs):
         BasicAppliance.__init__(self, name, **kwargs)
-        self.set_attr(key='elb', subkey='name', value='elbname')
+        self.set_attr(key='elb', subkey='name', value=elbname)
 
     def get_boto_connection(self):
         region = self.attr_value(key='ec2', subkey='region', merge_container_attrs=True)
