@@ -16,9 +16,11 @@ class SGException(Exception):
 
 
 def get_names(names_or_entities, exception_type=SGException, message=None):
-    """Given a thing (or list of things) which are either stringlike
-    or are clusto entities, return a list of strings representing the
-    names of those things."""
+    """
+    Given a thing (or list of things) which are either stringlike or
+    are clusto entities, return a list of strings representing the
+    names of those things.
+    """
     def _transform(thing):
         if isinstance(thing, types.StringTypes):
             return thing
