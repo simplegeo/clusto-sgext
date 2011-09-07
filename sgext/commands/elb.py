@@ -81,12 +81,12 @@ class ELB(script_helper.Script):
 
     def status(self, elb, args):
         sys.stdout.write('ELB: ')
-        sys.stdout.write(elb.elb_name().ljust(12))
+        sys.stdout.write(elb.elb_name.ljust(12))
         sys.stdout.write('DNS Name: ')
-        sys.stdout.write(elb.hostname().ljust(45))
-        sys.stdout.write('Region: %s\n' % elb.region())
+        sys.stdout.write(elb.hostname.ljust(45))
+        sys.stdout.write('Region: %s\n' % elb.region)
         sys.stdout.write('Active Availability Zones: %s\n\n'
-                         % ', '.join(elb.availability_zones()))
+                         % ', '.join(elb.availability_zones))
         sys.stdout.write('  Instance ID'.ljust(18))
         sys.stdout.write('Status\n')
         for instance_health in elb.instance_health():
@@ -98,12 +98,12 @@ class ELB(script_helper.Script):
     def _enabled(self, zone, elb):
         def instance_enabled(instance_health):
             return instance_health.state == 'InService'
-        zone_enabled = zone in elb.availability_zones()
+        zone_enabled = zone in elb.availability_zones
         instances_healthy = all(map(instance_enabled, elb.instance_health()))
         return zone_enabled and instances_healthy
 
     def _disabled(self, zone, elb):
-        return zone not in elb.availability_zones()
+        return zone not in elb.availability_zones
 
     def _await(self, function, args, timeout=120):
         if timeout != 0:
@@ -120,7 +120,7 @@ class ELB(script_helper.Script):
 
     def _verify(self, action, elb, zone):
         prompt = 'Are you sure you want to %s %s for %s? [N/yes] '
-        verify = raw_input(prompt % (action, zone, elb.elb_name()))
+        verify = raw_input(prompt % (action, zone, elb.elb_name))
         if str(verify) != 'yes':
             raise StandardError('You must type "yes" to confirm.')
 
