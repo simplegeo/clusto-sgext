@@ -1,3 +1,16 @@
+clusto-sgext (0.1.14) maverick; urgency=low
+
+  [ Paul Lathrop ]
+  * Reformat docstrings.
+  * Don't ask for credentials from the elb object itself. Make clients
+    ensure credentials are configured.
+  * Refactor utility functions for getting credentials.
+  * Fetch AWS credentials if they are not set.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 07 Sep 2011 20:49:41 +0000
+
 clusto-sgext (0.1.13) maverick; urgency=low
 
   [ Paul Lathrop ]
