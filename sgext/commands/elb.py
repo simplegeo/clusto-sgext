@@ -14,6 +14,8 @@ from time import sleep, time
 from clusto import script_helper
 import clusto
 
+from sgext.drivers import AmazonELB
+
 
 class ELB(script_helper.Script):
     """
@@ -178,6 +180,8 @@ class ELB(script_helper.Script):
             dispatch = self.usage
         try:
             elb = clusto.get_by_name(args.elbname)
+            if not isinstance(elb, AmazonELB):
+                raise LookupError
         except LookupError:
             elb = self._find_elb(args.elbname)
         result = dispatch(elb, args)
