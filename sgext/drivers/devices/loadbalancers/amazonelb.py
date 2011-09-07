@@ -33,7 +33,7 @@ class AmazonELB(BasicAppliance):
 
     def _get_boto_connection(self):
         """Internal method. Returns the boto connection object for this ELB."""
-        region = self.region
+        region = self.region()
         if region is None:
             raise SGELBException('Cannot find attribute with key="ec2", '
                                  'subkey="region" on AmazonELB object named '
@@ -47,13 +47,13 @@ class AmazonELB(BasicAppliance):
     def _get_boto_elb_object(self):
         """Internal method. Return the boto object for this ELB."""
         conn = self._get_boto_connection()
-        lbs = conn.get_all_load_balancers(str(self.elb_name))
+        lbs = conn.get_all_load_balancers(str(self.elb_name()))
         if len(lbs) < 1:
             raise SGELBException('Could not find ELB named %s in AWS!'
-                                 % self.elb_name)
+                                 % self.elb_name())
         elif len(lbs) > 1:
             raise SGELBException('Found multiple ELBs named %s in AWS!'
-                                 % self.elb_name)
+                                 % self.elb_name())
         return lbs[0]
 
     def update_instances(self):
@@ -89,7 +89,7 @@ class AmazonELB(BasicAppliance):
         except BotoServerError:
             BasicAppliance.remove(self, instance)
             raise SGELBException('Could not register instance %s for ELB %s'
-                                 % (instance.name, self.elb_name))
+                                 % (instance.name, self.elb_name()))
 
     def remove(self, instance):
         """De-register instances for this ELB and remove them as
@@ -102,30 +102,25 @@ class AmazonELB(BasicAppliance):
             elb.deregister_instances(str(instance.name))
         except BotoServerError:
             raise SGELBException('Could not deregister instance %s for ELB %s'
-                                 % (instance.name, self.elb_name))
+                                 % (instance.name, self.elb_name()))
         BasicAppliance.remove(self, instance)
 
-    @property
     def region(self):
         return self.attr_value(key='ec2', subkey='region',
                                merge_container_attrs=True)
 
-    @property
     def elb_name(self):
         """Return the aws name of this AmazonELB object."""
         return self.attr_value(key='elb', subkey='name')
 
-    @property
     def hostname(self):
         """Return the public DNS for this ELB."""
         return self._get_boto_elb_object().dns_name
 
-    @property
     def availability_zones(self):
         """Return the list of active availability zones for this ELB."""
         return self._get_boto_elb_object().availability_zones
 
-    @property
     def listeners(self):
         """Return the list of active listeners for this ELB."""
         return self._get_boto_elb_object().listeners
