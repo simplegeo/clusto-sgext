@@ -33,8 +33,7 @@ class AmazonELB(BasicAppliance):
 
     def _get_boto_connection(self):
         """Internal method. Returns the boto connection object for this ELB."""
-        region = self.attr_value(key='ec2', subkey='region',
-                                 merge_container_attrs=True)
+        region = self.region
         if region is None:
             raise SGELBException('Cannot find attribute with key="ec2", '
                                  'subkey="region" on AmazonELB object named '
@@ -105,6 +104,11 @@ class AmazonELB(BasicAppliance):
             raise SGELBException('Could not deregister instance %s for ELB %s'
                                  % (instance.name, self.elb_name))
         BasicAppliance.remove(self, instance)
+
+    @property
+    def region(self):
+        return self.attr_value(key='ec2', subkey='region',
+                               merge_container_attrs=True)
 
     @property
     def elb_name(self):
