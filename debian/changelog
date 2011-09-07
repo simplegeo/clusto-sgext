@@ -1,3 +1,50 @@
+clusto-sgext (0.1.11) maverick; urgency=low
+
+  [ Simple Geebus ]
+  * 
+
+  [ Paul Lathrop ]
+  * ignore virtualenv stuff.
+  * Refactor SGException into sgext.util for use elsewhere.
+  * Fix bug setting the key='elb', subkey='name' attribute.
+  * Add file header.
+  * Interactively request credentials if not found in environment/boto.
+  * Improve error handling for get_boto_connection
+  * PEP8/pylint!
+  * Add a private method to fetch the boto object for the ELB.
+  * Add a couple useful properties.
+  * Don't implictly convert to str - do that where we call into boto.
+    Stupid boto.
+  * Fix enable/disable of availability zones.
+  * Refactor get_names
+  * docstrings FTW
+  * Add instance_health (and modify get_state to use it)
+  * remove unused import.
+  * Ensure that the connection call uses the credentials.
+  * Fix get_credentials so it returns a dict.
+  * Over-ride insert() and remove() to register/deregister instances,
+    too.
+  * Insert all registered instances into the ELB at object creation
+    time.
+  * Only try to register/deregister SGServer objects.
+  * Fix ImportError.
+  * Refactor object initialization so we don't try to load instances
+    before we can. Create an update_instances method that syncs the
+    instance list between clusto and AWS.
+  * Convert to string before sending to boto.
+  * Move types import to correct file.
+  * Fix imports.
+  * Fix argument name.
+  * Remove redundant method.
+  * Fix overly long lines.
+  * Don't try to store credentials on the object.
+  * Add region property to ELB object.
+  * Add clusto-elb command.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 07 Sep 2011 00:23:35 +0000
+
 clusto-sgext (0.1.10) maverick; urgency=low
 
   [ Jeremy Grosser ]
