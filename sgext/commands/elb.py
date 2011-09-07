@@ -8,6 +8,7 @@
 """Command-line utility for controlling Amazon Elastic Load
 Balancers."""
 
+import os
 import sys
 from time import sleep, time
 
@@ -15,6 +16,7 @@ from clusto import script_helper
 import clusto
 
 from sgext.drivers import AmazonELB
+from sgext.util.aws import get_credentials, has_aws_environment
 
 
 class ELB(script_helper.Script):
@@ -40,6 +42,10 @@ class ELB(script_helper.Script):
                             default=False, help='Skip verification of '
                             'actions. Only use this if you are sure you know '
                             'what you are doing.')
+        parser.add_argument('--batch', action='store_true',
+                            default=False, help='Do not request credentials '
+                            'interactively if they cannot be loaded from the '
+                            'environment.')
         parser.add_argument('--wait-condition', default=None,
                             choices=['enabled', 'disabled'],
                             help='State you wish the specified zone to be '
@@ -174,6 +180,15 @@ class ELB(script_helper.Script):
             print
 
     def run(self, args):
+        cred = get_credentials(args.batch)
+        if (cred is not None) and (not has_aws_environment()):
+            os.environ['AWS_ACCESS_KEY_ID'] = cred['aws_access_key_id']
+            os.environ['AWS_SECRET_ACCESS_KEY'] = cred['aws_secret_access_key']
+        elif (cred is None) and args.batch:
+            raise StandardError('Could not load AWS credentials and batch '
+                                'is enabled! Please set credentials in the '
+                                'environment or the boto config in order to '
+                                'use batch mode.')
         try:
             dispatch = getattr(self, args.action)
         except AttributeError:
