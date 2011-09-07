@@ -1,3 +1,16 @@
+clusto-sgext (0.1.13) maverick; urgency=low
+
+  [ Paul Lathrop ]
+  * Reverting "Clusto does weird stuff with __getattribute so we can't
+    make these properties." Revert "Clusto does weird stuff with
+    __getattribute so we can't make these properties." This reverts
+    commit 722743dea432f7c934cb64439d3062d25faaf18b.
+  * Actually fix the problem.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 07 Sep 2011 00:52:25 +0000
+
 clusto-sgext (0.1.12) maverick; urgency=low
 
   [ Paul Lathrop ]
