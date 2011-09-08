@@ -1,3 +1,12 @@
+clusto-sgext (0.1.15) maverick; urgency=low
+
+  [ Paul Lathrop ]
+  * Look in containers for puppet class.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Thu, 08 Sep 2011 17:32:39 +0000
+
 clusto-sgext (0.1.14) maverick; urgency=low
 
   [ Paul Lathrop ]
