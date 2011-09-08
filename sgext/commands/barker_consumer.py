@@ -133,11 +133,11 @@ def barker_callback(body):
                 if not server in cluster:
                     cluster.insert(server)
             if subkey == 'role' and value:
-                if len(server.attr_values(key='puppet', subkey='class')) == 0:
+                if len(server.attr_values(key='puppet', subkey='class', merge_container_attrs=True)) == 0:
                     server.set_attr(key='puppet', subkey='class',
                                     value='site::role::%s' % value)
 
-        if len(server.attr_values(key='puppet', subkey='class')) == 0:
+        if len(server.attr_values(key='puppet', subkey='class', merge_container_attrs=True)) == 0:
             log.warning('Found host %s with no role set, using site::role::base' % ec2['instance-id'])
             server.set_attr(key='puppet', subkey='class',
                             value='site::role::base')
