@@ -53,9 +53,9 @@ class ELB(script_helper.Script):
     def _add_arguments(self, parser):
         parser.add_argument('elbname', help='The name of the ELB you wish to '
                             'control. Can be either the name of the object in '
-                            'clusto or the AWS name.')
+                            'clusto or the AWS name.', nargs='?')
         parser.add_argument('action', help='Action you wish to perform on the '
-                            'specified ELB.',
+                            'specified ELB.', nargs='?',
                             choices=['status', 'enable', 'disable', 'waitfor'])
         parser.add_argument('-z', '--zone', default=None, help='Availability '
                             'zone you wish to enable/disable.')
@@ -185,6 +185,21 @@ class ELB(script_helper.Script):
             self.status(elb, args)
             print
 
+    def list(self):
+        entities = clusto.get_entities(clusto_types=[AmazonELB])
+        if len(entities) < 1:
+            print 'No ELB object found in Clusto.'
+            print
+            return 0
+        else:
+            sys.stdout.write('Name'.ljust(15))
+            sys.stdout.write('Clusto Name\n')
+            for entity in entities:
+                sys.stdout.write(entity.elb_name.ljust(15))
+                sys.stdout.write(entity.name)
+                sys.stdout.write('\n')
+                print
+
     def run(self, args):
         cred = get_credentials(args.batch)
         if (cred is not None) and (not has_aws_environment()):
@@ -195,6 +210,14 @@ class ELB(script_helper.Script):
                                 'is enabled! Please set credentials in the '
                                 'environment or the boto config in order to '
                                 'use batch mode.')
+        if args.elbname is None and args.action is None:
+            print self._usage
+            print
+            print '%s: error: too few arguments' % sys.argv[0]
+            return 1
+        if args.elbname == 'list' and args.action is None:
+            args.elbname = None
+            return self.list()
         try:
             dispatch = getattr(self, args.action)
         except AttributeError:
