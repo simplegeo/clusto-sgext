@@ -25,12 +25,37 @@ class ELB(script_helper.Script):
     Balancers.
     """
 
+    _usage = """
+             clusto-elb elbname action [options]
+             clusto-elb list
+
+             Command-line utility for controlling Amazon Elastic Load
+             Balancers.
+
+             Available actions for `clusto-elb elbname action`:
+               status:  Print the status of the ELB and exit.
+               enable:  Enable a given AZ in the ELB. Must specify --zone. If a
+                        timeout is specified, the command will block until the
+                        AZ is enabled (active in the ELB and all instances are
+                        reported healthy) or until the timeout elapses. If
+                        the timeout is 0, will block until the AZ is enabled or
+                        the command is interrupted.
+               disable: Disable a given AZ in the ELB. Must specify --zone. Same
+                        timeout behavior as 'enable'.
+               waitfor: Wait for an AZ to be enabled or disabled. Must specify
+                        zone and --wait-condition. Same timeout behavior as
+                        enable'.
+
+            The alternate form `clusto-elb list` will list the available
+            ELBs.
+            """
+
     def _add_arguments(self, parser):
         parser.add_argument('elbname', help='The name of the ELB you wish to '
                             'control. Can be either the name of the object in '
-                            'clusto or the AWS name.')
+                            'clusto or the AWS name.', nargs='?')
         parser.add_argument('action', help='Action you wish to perform on the '
-                            'specified ELB.',
+                            'specified ELB.', nargs='?',
                             choices=['status', 'enable', 'disable', 'waitfor'])
         parser.add_argument('-z', '--zone', default=None, help='Availability '
                             'zone you wish to enable/disable.')
@@ -50,25 +75,7 @@ class ELB(script_helper.Script):
                             choices=['enabled', 'disabled'],
                             help='State you wish the specified zone to be '
                             'in before the command returns.')
-        parser.usage = """clusto-elb elbname action [options]
-
-        Command-line utility for controlling Amazon Elastic Load
-        Balancers.
-
-        Available commands:
-          status:  Print the status of the ELB and exit.
-          enable:  Enable a given AZ in the ELB. Must specify --zone. If a
-                   timeout is specified, the command will block until the
-                   AZ is enabled (active in the ELB and all instances are
-                   reported healthy) or until the timeout elapses. If
-                   the timeout is 0, will block until the AZ is enabled or
-                   the command is interrupted.
-          disable: Disable a given AZ in the ELB. Must specify --zone. Same
-                   timeout behavior as 'enable'.
-          waitfor: Wait for an AZ to be enabled or disabled. Must specify
-                   --zone and --wait-condition. Same timeout behavior as
-                   'enable'.
-       """
+        parser.usage = self._usage
 
     def add_subparser(self, subparsers):
         parser = self._setup_subparser(subparsers)
@@ -117,14 +124,13 @@ class ELB(script_helper.Script):
         if timeout != 0:
             start = int(time())
             while not function(*args):
-                sleep(.1)
+                sleep(1)
                 elapsed = int(time()) - start
                 if timeout <= elapsed:
                     raise TimeoutException()
         else:
             while not function(*args):
-                # Longer sleep to make it easier to interrupt.
-                sleep(.8)
+                sleep(1)
 
     def _verify(self, action, elb, zone):
         prompt = 'Are you sure you want to %s %s for %s? [N/yes] '
@@ -179,6 +185,21 @@ class ELB(script_helper.Script):
             self.status(elb, args)
             print
 
+    def list(self):
+        entities = clusto.get_entities(clusto_types=[AmazonELB])
+        if len(entities) < 1:
+            print 'No ELB object found in Clusto.'
+            print
+            return 0
+        else:
+            sys.stdout.write('Name'.ljust(15))
+            sys.stdout.write('Clusto Name\n')
+            for entity in entities:
+                sys.stdout.write(entity.elb_name.ljust(15))
+                sys.stdout.write(entity.name)
+                sys.stdout.write('\n')
+                print
+
     def run(self, args):
         cred = get_credentials(args.batch)
         if (cred is not None) and (not has_aws_environment()):
@@ -189,6 +210,14 @@ class ELB(script_helper.Script):
                                 'is enabled! Please set credentials in the '
                                 'environment or the boto config in order to '
                                 'use batch mode.')
+        if args.elbname is None and args.action is None:
+            print self._usage
+            print
+            print '%s: error: too few arguments' % sys.argv[0]
+            return 1
+        if args.elbname == 'list' and args.action is None:
+            args.elbname = None
+            return self.list()
         try:
             dispatch = getattr(self, args.action)
         except AttributeError:
