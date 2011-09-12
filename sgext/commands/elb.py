@@ -25,6 +25,31 @@ class ELB(script_helper.Script):
     Balancers.
     """
 
+    _usage = """
+             clusto-elb elbname action [options]
+             clusto-elb list
+
+             Command-line utility for controlling Amazon Elastic Load
+             Balancers.
+
+             Available actions for `clusto-elb elbname action`:
+               status:  Print the status of the ELB and exit.
+               enable:  Enable a given AZ in the ELB. Must specify --zone. If a
+                        timeout is specified, the command will block until the
+                        AZ is enabled (active in the ELB and all instances are
+                        reported healthy) or until the timeout elapses. If
+                        the timeout is 0, will block until the AZ is enabled or
+                        the command is interrupted.
+               disable: Disable a given AZ in the ELB. Must specify --zone. Same
+                        timeout behavior as 'enable'.
+               waitfor: Wait for an AZ to be enabled or disabled. Must specify
+                        zone and --wait-condition. Same timeout behavior as
+                        enable'.
+
+            The alternate form `clusto-elb list` will list the available
+            ELBs.
+            """
+
     def _add_arguments(self, parser):
         parser.add_argument('elbname', help='The name of the ELB you wish to '
                             'control. Can be either the name of the object in '
@@ -50,25 +75,7 @@ class ELB(script_helper.Script):
                             choices=['enabled', 'disabled'],
                             help='State you wish the specified zone to be '
                             'in before the command returns.')
-        parser.usage = """clusto-elb elbname action [options]
-
-        Command-line utility for controlling Amazon Elastic Load
-        Balancers.
-
-        Available commands:
-          status:  Print the status of the ELB and exit.
-          enable:  Enable a given AZ in the ELB. Must specify --zone. If a
-                   timeout is specified, the command will block until the
-                   AZ is enabled (active in the ELB and all instances are
-                   reported healthy) or until the timeout elapses. If
-                   the timeout is 0, will block until the AZ is enabled or
-                   the command is interrupted.
-          disable: Disable a given AZ in the ELB. Must specify --zone. Same
-                   timeout behavior as 'enable'.
-          waitfor: Wait for an AZ to be enabled or disabled. Must specify
-                   --zone and --wait-condition. Same timeout behavior as
-                   'enable'.
-       """
+        parser.usage = self._usage
 
     def add_subparser(self, subparsers):
         parser = self._setup_subparser(subparsers)
