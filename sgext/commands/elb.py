@@ -124,14 +124,13 @@ class ELB(script_helper.Script):
         if timeout != 0:
             start = int(time())
             while not function(*args):
-                sleep(.1)
+                sleep(1)
                 elapsed = int(time()) - start
                 if timeout <= elapsed:
                     raise TimeoutException()
         else:
             while not function(*args):
-                # Longer sleep to make it easier to interrupt.
-                sleep(.8)
+                sleep(1)
 
     def _verify(self, action, elb, zone):
         prompt = 'Are you sure you want to %s %s for %s? [N/yes] '
