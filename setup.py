@@ -12,6 +12,7 @@ setup(name='clusto-sgext',
         'kombu',
         'eventlet',
         'PyYAML',
+        'repoman',
       ],
       entry_points={
         'console_scripts': [
