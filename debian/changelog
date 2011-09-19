@@ -1,3 +1,12 @@
+clusto-sgext (0.1.17) maverick; urgency=low
+
+  [ Paul Lathrop ]
+  * Add rudimentary support for modeling apt repositories.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Mon, 19 Sep 2011 23:31:38 +0000
+
 clusto-sgext (0.1.16) maverick; urgency=low
 
   [ Paul Lathrop ]
