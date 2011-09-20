@@ -1,3 +1,13 @@
+clusto-sgext (0.1.23) maverick; urgency=low
+
+  [ dsmith ]
+  * Make sure the proper version of repoman is installed
+  * Bad paren placement
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 20 Sep 2011 20:45:37 +0000
+
 clusto-sgext (0.1.21) maverick; urgency=low
 
   [ dsmith ]
