@@ -18,7 +18,7 @@ class AWSCleanup(script_helper.Script):
         reasons = {}
 
         http = httplib2.Http()
-        http.add_credentials('cron', 'Uab9wini')
+        http.add_credentials(*os.environ['AMAZINGHORSE_CREDS'].split(':', 1))
         for region in ('us-east-1', 'us-west-1'):
             resp, content = http.request('https://amazinghorse.simplegeo.com:4430/aws/ec2/%s/instance/' % region)
             for instance in json.loads(content):
