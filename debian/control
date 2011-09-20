@@ -7,6 +7,6 @@ Standards-Version: 3.8.3
 
 Package: clusto-sgext
 Architecture: any
-Depends: ${python:Depends}, python-boto, python-mysqldb, python-ipy, python-kombu, python-eventlet, python-yaml, (python-repoman >= 1.5.1sg89)
+Depends: ${python:Depends}, python-boto, python-mysqldb, python-ipy, python-kombu, python-eventlet, python-yaml, python-repoman (>= 1.5.1sg89)
 Provides: ${python:Provides}
 Description: SimpleGeo extension for clusto
