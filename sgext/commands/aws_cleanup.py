@@ -5,6 +5,7 @@ import clusto
 import simplejson as json
 import httplib2
 import sys
+import os
 
 
 class AWSCleanup(script_helper.Script):
