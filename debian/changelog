@@ -1,3 +1,12 @@
+clusto-sgext (0.1.21) maverick; urgency=low
+
+  [ dsmith ]
+  * Add the python-repoman dependency
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 20 Sep 2011 20:08:36 +0000
+
 clusto-sgext (0.1.20) maverick; urgency=low
 
   [ Jeremy Grosser ]
