@@ -1,3 +1,13 @@
+clusto-sgext (0.1.24) maverick; urgency=low
+
+  [ Paul Lathrop ]
+  * Remove repoman, since there's a repoman in pypi that isn't the apt
+    repo manager.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 20 Sep 2011 21:51:36 +0000
+
 clusto-sgext (0.1.23) maverick; urgency=low
 
   [ dsmith ]
