@@ -8,6 +8,9 @@
 Manage the apt family of package repositories using the repoman
 API.
 """
+
+import os
+
 import repoman.client as repo
 
 from sgext.drivers import Repository
@@ -31,27 +34,31 @@ class Apt(Repository):
         """
         return self.attr_value(key='repository', subkey='url')
 
-    @property
+    def request(self, endpoint='', sub='repository', **kwargs):
+        repo.API_URL = self.url
+        return repo.request(endpoint, sub, **kwargs)
+
     def dists(self):
         """
         Return a sorted list of dists in this repository.
         """
-        return sorted(repo.request(''))
+        return sorted(self.request(''))
 
     def packages(self, dist):
         """
         Return a sorted list of packages in the given dist.
         """
-        if dist not in self.dists:
+        if dist not in self.dists():
             raise DistError('No such dist: %s' % dist, dist)
-        return sorted(repo.request(dist))
+        return sorted(self.request(dist))
 
     def package_versions(self, dist):
         """
         Return a list of (package, version) tuples for the packages in
         the given dist.
         """
-        if dist not in self.dists:
+        # This is TERRIBLY slow. How do I make it better?
+        if dist not in self.dists():
             raise DistError('No such dist: %s' % dist, dist)
         return sorted([(p, self.package(p, dist)['Version'])
                        for p in self.packages(dist)])
@@ -60,13 +67,13 @@ class Apt(Repository):
         """
         Return the metadata for the given package in the given dist.
         """
-        if dist not in self.dists:
+        if dist not in self.dists():
             raise DistError('No such dist: %s' % dist, dist)
-        result = repo.request('%s/%s' % (dist, pkg))
+        result = self.request('%s/%s' % (dist, pkg))
         if len(result) == 0:
             raise PackageError('No such package: %s in dist: %s' % (pkg, dist),
                                dist, pkg)
-        return result
+        return result[0]
 
     def package_version(self, pkg, dist):
         """
@@ -80,9 +87,9 @@ class Apt(Repository):
         source dist to the destination dist. If version is None, just
         copy whatever is present in the source dist.
         """
-        if src_dist not in self.dists:
+        if src_dist not in self.dists():
             raise DistError('No such source dist: %s' % src_dist, src_dist)
-        if dst_dist not in self.dists:
+        if dst_dist not in self.dists():
             raise DistError('No such destination dist: %s' % dst_dist,
                             dst_dist)
         # If no version is specified, use whatever version is in the
@@ -101,7 +108,7 @@ class Apt(Repository):
             return self.package(pkg, dst_dist)
         # Oh damn, we got this far, we have to actually do
         # something.
-        repo.request('%s/%s/copy?dstdist=%s' % (src_dist, pkg, dst_dist),
+        self.request('%s/%s/copy?dstdist=%s' % (src_dist, pkg, dst_dist),
                      method='POST')
         # We've promoted, so the version in the destination dist
         # should be correct. If not, complain loudly!
