@@ -131,10 +131,7 @@ class AptRepository(script_helper.Script):
         result = [None, None, None]
         if path is None:
             return result
-        components = path.split('/')
-        for idx in range(len(components)):
-            result[idx] = components[idx]
-        return result
+        return (path.split('/')[:3] + result)[:3]
 
     def run(self, args):
         try:
