@@ -36,7 +36,11 @@ class AptRepository(script_helper.Script):
              Available actions for `clusto-apt reponame/dist action`:
 
                list: List the packages available in the specified
-                     dist, along with their version.
+                     dist.
+
+               versions: List the packages available in the specified
+                         dist, along with their version. NOTE: This
+                         takes a very long time.
 
              Available actions for `clusto-apt reponame/dist/package
              action`:
@@ -81,17 +85,22 @@ class AptRepository(script_helper.Script):
                 print dist.rjust(len(dist) + 2)
             return 0
         elif args.package is None:
-            pkg_versions = repo.package_versions(args.dist)
-            pkg_name_width = max([name for (name, ver) in pkg_versions],
-                                 key=len)
-            pkg_field_width = len(max(['Package', pkg_name_width], key=len)) + 4
-            print 'Package'.ljust(pkg_field_width) + 'Version'
-            for (name, ver) in pkg_versions:
-                print name.ljust(pkg_name_width) + ver
+            for pkg in repo.packages(args.dist):
+                print pkg
         if args.action == 'version' or args.action == 'list':
             version = repo.package_version(args.package, args.dist)
             print args.package.ljust(len(args.package) + 4) + version
         return 0
+
+    def _cmd_versions(self, args):
+        repo = clusto.get_by_name(args.reponame)
+        pkg_versions = repo.package_versions(args.dist)
+        pkg_name_width = max([name for (name, ver) in pkg_versions],
+                             key=len)
+        pkg_field_width = len(max(['Package', pkg_name_width], key=len)) + 4
+        print 'Package'.ljust(pkg_field_width) + 'Version'
+        for (name, ver) in pkg_versions:
+            print name.ljust(pkg_field_width) + ver
 
     def _cmd_promote(self, args):
         if args.package is None:
