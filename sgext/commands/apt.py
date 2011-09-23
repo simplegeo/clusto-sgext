@@ -31,13 +31,14 @@ class AptRepository(script_helper.Script):
              Available actions for `clusto-apt reponame action`:
 
                list: List the distributions available in the
-                     specified repository.
+                     specified repository. This is the default
+                     action if none is specified.
 
              Available actions for `clusto-apt reponame/dist action`:
 
                list: List the packages available in the specified
-                     dist.
-
+                     dist. This is the default action if none is
+                     specified.
                versions: List the packages available in the specified
                          dist, along with their version. NOTE: This
                          takes a very long time.
@@ -45,9 +46,10 @@ class AptRepository(script_helper.Script):
              Available actions for `clusto-apt reponame/dist/package
              action`:
 
+               version: Print the version string for the specified
+                        package. This is the default action if none
+                        is specified.
                metadata: Print the package metadata for the specified
-                         package.
-               version:  Print the version string for the specified
                          package.
 
              The form `clusto-apt` (or `clusto-apt list`) will list
@@ -87,10 +89,9 @@ class AptRepository(script_helper.Script):
         elif args.package is None:
             for pkg in repo.packages(args.dist):
                 print pkg
-        if args.action == 'version' or args.action == 'list':
-            version = repo.package_version(args.package, args.dist)
-            print args.package.ljust(len(args.package) + 4) + version
-        return 0
+            return 0
+        else:
+            return self._cmd_version(args)
 
     def _cmd_versions(self, args):
         repo = clusto.get_by_name(args.reponame)
@@ -101,6 +102,12 @@ class AptRepository(script_helper.Script):
         print 'Package'.ljust(pkg_field_width) + 'Version'
         for (name, ver) in pkg_versions:
             print name.ljust(pkg_field_width) + ver
+
+    def _cmd_version(self, args):
+        repo = clusto.get_by_name(args.reponame)
+        version = repo.package_version(args.package, args.dist)
+        print args.package.ljust(len(args.package) + 4) + version
+        return 0
 
     def _cmd_promote(self, args):
         if args.package is None:
