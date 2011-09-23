@@ -98,7 +98,10 @@ class AptRepository(script_helper.Script):
 
     def metadata(self, args):
         repo = clusto.get_by_name(args.reponame)
-        print repo.package(args.package, args.dist)
+        meta = repo.package(args.package, args.dist)
+        keylength = len(max(meta, key=len)) + 2
+        for (key, val) in sorted(meta.iteritems()):
+            print key.ljust(keylength) + val
 
     def parse_path(self, path):
         result = [None, None, None]
