@@ -1,3 +1,23 @@
+clusto-sgext (0.1.25) maverick; urgency=low
+
+  [ Paul Lathrop ]
+  * Fix some bugs in the apt repository code.
+  * Add a clusto command for querying/manipulating apt repositories.
+  * Finish implementing documented commands.
+  * Fixup dispatch of metadata command.
+  * Clean up metadata output.
+  * Use accurate variable name.
+  * Improve command dispatch.
+  * Fix logic error pointed out by @motivator
+  * Break out list of packages with versions into a separate command.
+  * Refactor how the package-specific actions work.
+  * simplify parse_path per @ieure's suggestion.
+  * Need to return something.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Fri, 23 Sep 2011 17:48:41 +0000
+
 clusto-sgext (0.1.24) maverick; urgency=low
 
   [ Paul Lathrop ]
