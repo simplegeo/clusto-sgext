@@ -41,7 +41,7 @@ class AptRepository(script_helper.Script):
              Available actions for `clusto-apt reponame/dist/package
              action`:
 
-               metadate: Print the package metadata for the specified
+               metadata: Print the package metadata for the specified
                          package.
                version:  Print the version string for the specified
                          package.
@@ -88,9 +88,11 @@ class AptRepository(script_helper.Script):
             print 'Package'.ljust(pkg_name_width) + 'Version'
             for (name, ver) in pkg_versions:
                 print name.ljust(pkg_name_width) + ver
-        else:
+        if args.action == 'version' or args.action == 'list':
             version = repo.package_version(args.package, args.dist)
             print args.package.ljust(len(args.package) + 4) + version
+        elif args.action == 'metadata':
+            print repo.package(args.package, args.dist)
 
     def promote(self, args):
         repo = clusto.get_by_name(args.reponame)
