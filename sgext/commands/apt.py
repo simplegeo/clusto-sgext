@@ -82,10 +82,10 @@ class AptRepository(script_helper.Script):
             return 0
         elif args.package is None:
             pkg_versions = repo.package_versions(args.dist)
-            pkg_name_width = len(max([name for (name, ver) in pkg_versions],
-                                     key=len))
-            pkg_name_width = max(['Package', pkg_name_width], key=len) + 4
-            print 'Package'.ljust(pkg_name_width) + 'Version'
+            pkg_name_width = max([name for (name, ver) in pkg_versions],
+                                 key=len)
+            pkg_field_width = len(max(['Package', pkg_name_width], key=len)) + 4
+            print 'Package'.ljust(pkg_field_width) + 'Version'
             for (name, ver) in pkg_versions:
                 print name.ljust(pkg_name_width) + ver
         if args.action == 'version' or args.action == 'list':
