@@ -91,12 +91,14 @@ class AptRepository(script_helper.Script):
         if args.action == 'version' or args.action == 'list':
             version = repo.package_version(args.package, args.dist)
             print args.package.ljust(len(args.package) + 4) + version
-        elif args.action == 'metadata':
-            print repo.package(args.package, args.dist)
 
     def promote(self, args):
         repo = clusto.get_by_name(args.reponame)
         return repo.promote(args.package, args.dist, args.dest)
+
+    def metadata(self, args):
+        repo = clusto.get_by_name(args.reponame)
+        print repo.package(args.package, args.dist)
 
     def parse_path(self, path):
         result = [None, None, None]
@@ -110,6 +112,8 @@ class AptRepository(script_helper.Script):
     def run(self, args):
         if args.action == 'list':
             return self.list(args)
+        elif args.action == 'metadata':
+            return self.metadata(args)
         elif args.action == 'promote':
             if args.package is None:
                 raise ValueError('Must specify a package to promote.')
