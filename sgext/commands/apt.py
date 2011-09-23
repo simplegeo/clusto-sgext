@@ -67,7 +67,7 @@ class AptRepository(script_helper.Script):
         parser = self._setup_subparser(subparsers)
         self._add_arguments(parser)
 
-    def list(self, args):
+    def _cmd_list(self, args):
         if args.path is None or args.reponame is None:
             repos = clusto.get_entities(clusto_types=[Apt])
             print 'Repositories in Clusto:'
@@ -91,17 +91,25 @@ class AptRepository(script_helper.Script):
         if args.action == 'version' or args.action == 'list':
             version = repo.package_version(args.package, args.dist)
             print args.package.ljust(len(args.package) + 4) + version
+        return 0
 
-    def promote(self, args):
+    def _cmd_promote(self, args):
+        if args.package is None:
+            raise ValueError('Must specify a package to promote.')
+        if args.dest is None:
+            raise ValueError('Must specify a destination dist using'
+                             '-d or --dest.')
         repo = clusto.get_by_name(args.reponame)
-        return repo.promote(args.package, args.dist, args.dest)
+        repo.promote(args.package, args.dist, args.dest)
+        return 0
 
-    def metadata(self, args):
+    def _cmd_metadata(self, args):
         repo = clusto.get_by_name(args.reponame)
         meta = repo.package(args.package, args.dist)
         key_field_len = len(max(meta, key=len)) + 2
         for (key, val) in sorted(meta.iteritems()):
             print key.ljust(key_field_len) + val
+        return 0
 
     def parse_path(self, path):
         result = [None, None, None]
@@ -113,18 +121,11 @@ class AptRepository(script_helper.Script):
         return result
 
     def run(self, args):
-        if args.action == 'list':
-            return self.list(args)
-        elif args.action == 'metadata':
-            return self.metadata(args)
-        elif args.action == 'promote':
-            if args.package is None:
-                raise ValueError('Must specify a package to promote.')
-            if args.dest is None:
-                raise ValueError('Must specify a destination dist using'
-                                 '-d or --dest.')
-            return self.promote(args)
-        return 0
+        try:
+            cmd = getattr(self, '_cmd_%s' % args.action)
+            return cmd(args)
+        except AttributeError:
+            raise StandardError('No such command %s' % args.action)
 
 
 def main():
