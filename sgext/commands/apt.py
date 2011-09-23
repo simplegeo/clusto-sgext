@@ -102,6 +102,7 @@ class AptRepository(script_helper.Script):
         print 'Package'.ljust(pkg_field_width) + 'Version'
         for (name, ver) in pkg_versions:
             print name.ljust(pkg_field_width) + ver
+        return 0
 
     def _cmd_version(self, args):
         repo = clusto.get_by_name(args.reponame)
