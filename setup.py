@@ -6,13 +6,14 @@ setup(name='clusto-sgext',
       version=__version__,
       packages=find_packages(),
       install_requires=[
+        'IPy',
+        'PyYAML',
+        'boto',
         'clusto',
         'decorator',
-        'IPy',
-        'boto',
-        'kombu',
         'eventlet',
-        'PyYAML',
+        'kombu',
+        'ostrich',
       ],
       entry_points={
         'console_scripts': [

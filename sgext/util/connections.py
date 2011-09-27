@@ -16,8 +16,6 @@ from operator import itemgetter
 from decorator import decorator
 from ostrich import stats
 
-import places.logging as logging
-
 
 class throttle(object):
 
@@ -70,7 +68,7 @@ def retry(max_=3, delay=0, exceptions=None):
                 return func(*args, **kwargs)
             except exceptions, ex:
                 stats.incr('%s_retry' % str(func))
-                logging.warn("Caught %s on %s attempt %d/%d",
+                logging.warning("Caught %s on %s attempt %d/%d",
                               repr(ex), str(func), attempts, max_)
                 time.sleep(delay)
                 if max_ != -1 and attempts < max_:
