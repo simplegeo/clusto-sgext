@@ -1,3 +1,12 @@
+clusto-sgext (0.1.28) maverick; urgency=low
+
+  [ Paul Lathrop ]
+  * Add ostrich dependency, fix logging.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 27 Sep 2011 18:54:38 +0000
+
 clusto-sgext (0.1.27) maverick; urgency=low
 
   [ Paul Lathrop ]
