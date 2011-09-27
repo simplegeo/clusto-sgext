@@ -7,6 +7,7 @@ setup(name='clusto-sgext',
       packages=find_packages(),
       install_requires=[
         'clusto',
+        'decorator',
         'IPy',
         'boto',
         'kombu',
