@@ -65,61 +65,6 @@ class AmazonELB(BasicAppliance):
                                  % self.elb_name)
         return lbs[0]
 
-    def update_instances(self):
-        """
-        Fetch the registered instances for this ELB from the AWS
-        API and insert them into the ELB object (if they exist as
-        clusto objects).
-        """
-        elb = self._get_boto_elb_object()
-        elb_instances = [instance.id for instance in elb.instances]
-        self_instances = self.contents()
-        for instance in self_instances:
-            if instance.name not in elb_instances:
-                BasicAppliance.remove(self, instance)
-        for instance_id in elb_instances:
-            if instance_id not in [instance.name
-                                   for instance in self_instances]:
-                # Insert all already-registered instances into the ELB if
-                # they exist as clusto objects already.
-                try:
-                    BasicAppliance.insert(self,
-                                          clusto.get_by_name(instance_id))
-                except LookupError:
-                    pass
-
-    def insert(self, instance):
-        """
-        Register instances for this ELB and add them as children in
-        clusto.
-        """
-        BasicAppliance.insert(self, instance)
-        if not isinstance(instance, sgext.drivers.SGServer):
-            return
-        elb = self._get_boto_elb_object()
-        try:
-            elb.register_instances(str(instance.name))
-        except BotoServerError:
-            BasicAppliance.remove(self, instance)
-            raise SGELBException('Could not register instance %s for ELB %s'
-                                 % (instance.name, self.elb_name))
-
-    def remove(self, instance):
-        """
-        De-register instances for this ELB and remove them as
-        children in clusto.
-        """
-        if not isinstance(instance, SGServer):
-            BasicAppliance.remove(self, instance)
-            return
-        elb = self._get_boto_elb_object()
-        try:
-            elb.deregister_instances(str(instance.name))
-        except BotoServerError:
-            raise SGELBException('Could not deregister instance %s for ELB %s'
-                                 % (instance.name, self.elb_name))
-        BasicAppliance.remove(self, instance)
-
     @property
     def region(self):
         return self.attr_value(key='ec2', subkey='region',
