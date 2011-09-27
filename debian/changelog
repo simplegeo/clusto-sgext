@@ -1,3 +1,14 @@
+clusto-sgext (0.1.26) maverick; urgency=low
+
+  [ Paul Lathrop ]
+  * Remove broken functionality.
+  * Use Ian's connections library to make ELB command block
+    appropriately.
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 27 Sep 2011 18:42:40 +0000
+
 clusto-sgext (0.1.25) maverick; urgency=low
 
   [ Paul Lathrop ]
