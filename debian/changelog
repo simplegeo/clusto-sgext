@@ -1,3 +1,12 @@
+clusto-sgext (0.1.30) maverick; urgency=low
+
+  [ Derek Smith ]
+  * Move role pooltypes around
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Tue, 08 Nov 2011 22:11:39 +0000
+
 clusto-sgext (0.1.29) maverick; urgency=low
 
   * UNRELEASED
