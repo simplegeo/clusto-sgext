@@ -73,11 +73,6 @@ def barker_callback(body):
                     p.set_attr(key='pooltype', value='environment')
                 if not server in p:
                     p.insert(server)
-                p = clusto.get_or_create(role, Pool)
-                if not p.attrs(key='pooltype', value='role'):
-                    p.set_attr(key='pooltype', value='role')
-                if not server in p:
-                    p.insert(server)
 
         #server.bind_ip_to_osport(ec2['local-ipv4'], 'nic-eth', 0)
         #server.bind_ip_to_osport(ec2['public-ipv4'], 'nic-eth', 0)
@@ -136,6 +131,12 @@ def barker_callback(body):
                 if len(server.attr_values(key='puppet', subkey='class', merge_container_attrs=True)) == 0:
                     server.set_attr(key='puppet', subkey='class',
                                     value='site::role::%s' % value)
+
+                p = clusto.get_or_create(value, Pool)
+                if not p.attrs(key='pooltype', value='role'):
+                    p.set_attr(key='pooltype', value='role')
+                if not server in p:
+                    p.insert(server)
 
         if len(server.attr_values(key='puppet', subkey='class', merge_container_attrs=True)) == 0:
             log.warning('Found host %s with no role set, using site::role::base' % ec2['instance-id'])
