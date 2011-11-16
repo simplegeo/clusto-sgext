@@ -1,3 +1,12 @@
+clusto-sgext (0.1.32) maverick; urgency=low
+
+  [ Jeremy Grosser ]
+  * Syntax errors
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Wed, 16 Nov 2011 23:50:23 +0000
+
 clusto-sgext (0.1.31) maverick; urgency=low
 
   * UNRELEASED
