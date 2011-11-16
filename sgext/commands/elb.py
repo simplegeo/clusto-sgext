@@ -118,9 +118,8 @@ class ELB(script_helper.Script):
         try:
             elb.enable_zone(args.zone)
         except:
-        print
+            pass
         self.status(elb, args)
-        print
 
     def disable(self, elb, args):
         if args.zone is None:
@@ -128,15 +127,12 @@ class ELB(script_helper.Script):
         if not args.danger_zone:
             self._verify('disable', elb, args.zone)
         elb.disable_zone(args.zone)
-        print
         self.status(elb, args)
-        print
 
     def list(self):
         entities = clusto.get_entities(clusto_types=[AmazonELB])
         if len(entities) < 1:
             print 'No ELB object found in Clusto.'
-            print
             return 0
         else:
             sys.stdout.write('Name'.ljust(15))
@@ -145,7 +141,6 @@ class ELB(script_helper.Script):
                 sys.stdout.write(entity.elb_name.ljust(15))
                 sys.stdout.write(entity.name)
                 sys.stdout.write('\n')
-                print
 
     def run(self, args):
         cred = get_credentials(args.batch)
@@ -159,7 +154,6 @@ class ELB(script_helper.Script):
                                 'use batch mode.')
         if args.elbname is None and args.action is None:
             print self._usage
-            print
             print '%s: error: too few arguments' % sys.argv[0]
             return 1
         if args.elbname == 'list' and args.action is None:
