@@ -23,5 +23,6 @@ setup(name='clusto-sgext',
             'clusto-aws-cleanup = sgext.commands.aws_cleanup:main',
             'clusto-elb = sgext.commands.elb:main',
             'clusto-apt = sgext.commands.apt:main',
+            'clusto-chef = sgext.commands.chef:main',
         ]
       })
