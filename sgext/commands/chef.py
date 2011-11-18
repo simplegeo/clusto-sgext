@@ -13,13 +13,13 @@ def get_attributes(name):
     obj = clusto.get_by_name(name)
     results = {}
     for attr in obj.attrs(merge_container_attrs=True):
-        if not attr.key in ('chef', 'ip', 'owner'):
-            continue
-        if attr.subkey in results:
-            results[attr.subkey] = [results[attr.subkey]]
-            results[attr.subkey].append(attr.value)
+        if not attr.key in results:
+            results[attr.key] = {}
+        if attr.subkey in results[attr.key]:
+            results[attr.key][attr.subkey] = [results[attr.subkey]]
+            results[attr.key][attr.subkey].append(attr.value)
         else:
-            results[attr.subkey] = attr.value
+            results[attr.key][attr.subkey] = attr.value
     print results
 
     bottle.response.content_type = 'application/json'
