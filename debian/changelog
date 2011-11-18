@@ -1,3 +1,12 @@
+clusto-sgext (0.1.38) maverick; urgency=low
+
+  [ Jeremy Grosser ]
+  * Just return everything
+
+  [ SimpleGeo Nerds ]
+
+ -- SimpleGeo Nerds <nerds@simplegeo.com>  Fri, 18 Nov 2011 22:15:17 +0000
+
 clusto-sgext (0.1.37) maverick; urgency=low
 
   * UNRELEASED
