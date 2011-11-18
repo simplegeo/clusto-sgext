@@ -15,11 +15,9 @@ def get_attributes(name):
     for attr in obj.attrs(merge_container_attrs=True):
         if not attr.key in results:
             results[attr.key] = {}
-        if attr.subkey in results[attr.key]:
-            results[attr.key][attr.subkey] = [results[attr.subkey]]
-            results[attr.key][attr.subkey].append(attr.value)
-        else:
-            results[attr.key][attr.subkey] = attr.value
+        if not attr.subkey in results[attr.key]:
+            results[attr.key][attr.subkey] = []
+        results[attr.key][attr.subkey].append(attr.value)
     print results
 
     bottle.response.content_type = 'application/json'
