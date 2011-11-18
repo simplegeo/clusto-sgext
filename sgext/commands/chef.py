@@ -12,8 +12,9 @@ import os
 def get_attributes(name):
     obj = clusto.get_by_name(name)
     results = {}
-    for attr in obj.attrs(key='chef', merge_container_attrs=True):
-        print attr
+    for attr in obj.attrs(merge_container_attrs=True):
+        if not attr.key in ('chef', 'ip', 'owner'):
+            continue
         if attr.subkey in results:
             results[attr.subkey] = [results[attr.subkey]]
             results[attr.subkey].append(attr.value)
